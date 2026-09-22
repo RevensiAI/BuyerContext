@@ -7,8 +7,8 @@
     "name": "Revensi",
     "url": "https://revensi.com"
   },
-  "homepage": "https://github.com/RevensiAI/buyer-context",
-  "repository": "https://github.com/RevensiAI/buyer-context",
+  "homepage": "https://github.com/RevensiAI/BuyerContext",
+  "repository": "https://github.com/RevensiAI/BuyerContext",
   "license": "MIT",
   "keywords": [
     "audit",

@@ -23,7 +23,7 @@ All Plugin output stays on your filesystem. Nothing is uploaded to Revensi or to
 
 ## Data Revensi collects
 
-**None.** Revensi does not operate any server that the Plugin contacts. The Plugin's source is distributed via GitHub at [github.com/RevensiAI/buyer-context](https://github.com/RevensiAI/buyer-context); cloning, updates, and issue activity go through GitHub under [GitHub's privacy policy](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
+**None.** Revensi does not operate any server that the Plugin contacts. The Plugin's source is distributed via GitHub at [github.com/RevensiAI/BuyerContext](https://github.com/RevensiAI/BuyerContext); cloning, updates, and issue activity go through GitHub under [GitHub's privacy policy](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
 
 ## Third parties
 
@@ -37,4 +37,4 @@ If the Plugin's behavior changes in a way that affects this policy, the *Last up
 
 ## Contact
 
-Questions about this policy: [hello@revensi.com](mailto:hello@revensi.com) or open an issue at [github.com/RevensiAI/buyer-context/issues](https://github.com/RevensiAI/buyer-context/issues).
+Questions about this policy: [hello@revensi.com](mailto:hello@revensi.com) or open an issue at [github.com/RevensiAI/BuyerContext/issues](https://github.com/RevensiAI/BuyerContext/issues).

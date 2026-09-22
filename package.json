@@ -16,11 +16,11 @@
   ],
   "homepage": "https://buyercontext.com",
   "bugs": {
-    "url": "https://github.com/RevensiAI/buyer-context/issues"
+    "url": "https://github.com/RevensiAI/BuyerContext/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RevensiAI/buyer-context.git"
+    "url": "git+https://github.com/RevensiAI/BuyerContext.git"
   },
   "license": "MIT",
   "author": {

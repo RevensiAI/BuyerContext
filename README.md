@@ -1,4 +1,4 @@
-# Buyer Context Skills for AI Agents
+# BuyerContext Skills for AI Agents
 
 A 12-skill audit collection that simulates how AI buying agents read your site — and produces a gap report your own agents can close.
 
@@ -17,13 +17,13 @@ No API keys required for the core flow. `BRAVE_API_KEY` is optional — see [Opt
 ## Install
 
 ```bash
-npx skills add RevensiAI/buyer-context
+npx skills add RevensiAI/BuyerContext
 ```
 
 Installs all 12 skills under `~/.claude/skills/`. Individual skills install the same way:
 
 ```bash
-npx skills add RevensiAI/buyer-context/homepage-audit
+npx skills add RevensiAI/BuyerContext/homepage-audit
 ```
 
 ### Or install as a Claude Code plugin
@@ -31,7 +31,7 @@ npx skills add RevensiAI/buyer-context/homepage-audit
 Claude Code users can install the suite as a plugin instead. Add the marketplace once, then install the plugin:
 
 ```bash
-/plugin marketplace add RevensiAI/buyer-context
+/plugin marketplace add RevensiAI/BuyerContext
 /plugin install revensi@revensi-buyer-context
 ```
 
@@ -51,7 +51,7 @@ To pull in upstream updates: `/plugin marketplace update revensi-buyer-context`.
 The repo also ships a Codex plugin manifest (`.codex-plugin/plugin.json`) and marketplace entry (`.agents/plugins/marketplace.json`). Point Codex at the marketplace, then install the plugin from it:
 
 ```bash
-codex plugin marketplace add RevensiAI/buyer-context
+codex plugin marketplace add RevensiAI/BuyerContext
 codex plugin install buyer-context@revensi-buyer-context
 ```
 
@@ -67,7 +67,7 @@ The suite works in [Claude Code on the web / Cowork](https://docs.claude.com/en/
 - **Setup script** — Cowork sessions start from a fresh clone, so installs don't persist across sessions. Add the install to your environment's setup script so it runs automatically:
 
   ```bash
-  npx skills add RevensiAI/buyer-context
+  npx skills add RevensiAI/BuyerContext
   ```
 
   (`npx` works in setup scripts; the `/plugin marketplace add` flow runs inside Claude Code itself, so for plugin-style installs you'd type the two `/plugin …` commands at the start of each session.)
@@ -274,7 +274,7 @@ node shared/scripts/sync-references.mjs
 
 ## Contributing
 
-Contributions welcome — issues, PRs, new skill ideas, rubric refinements. Open a PR or file an issue on [GitHub](https://github.com/RevensiAI/buyer-context).
+Contributions welcome — issues, PRs, new skill ideas, rubric refinements. Open a PR or file an issue on [GitHub](https://github.com/RevensiAI/BuyerContext).
 
 ## About
 
