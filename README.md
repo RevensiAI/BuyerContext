@@ -278,7 +278,7 @@ Contributions welcome — issues, PRs, new skill ideas, rubric refinements. Open
 
 ## About
 
-Built and maintained by [Revensi](https://revensi.com) — agent-led growth for B2B SaaS.
+Built and maintained by [Revensi](https://revensi.com). We help companies define their AI strategy and build proprietary AI systems around their data, workflows and knowledge, without locking critical intelligence into a vendor.
 
 ## License
 
