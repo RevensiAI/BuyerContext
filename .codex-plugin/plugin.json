@@ -1,7 +1,7 @@
 {
   "name": "buyer-context",
-  "version": "0.2.0",
-  "description": "12-skill audit collection that simulates how AI buying agents read your site and produces a gap report your repair agents can close.",
+  "version": "0.3.0",
+  "description": "Research-agent toolkit for building source-backed buyer context from company, customer, market, and competitor evidence.",
   "author": {
     "name": "Revensi",
     "url": "https://revensi.com"
@@ -10,22 +10,23 @@
   "repository": "https://github.com/RevensiAI/BuyerContext",
   "license": "MIT",
   "keywords": [
-    "audit",
-    "ai-readability",
+    "buyer-research",
+    "customer-research",
+    "market-research",
+    "competitor-research",
     "buyer-context",
-    "llm-agents",
-    "structured-data",
-    "json-ld",
-    "schema",
-    "seo"
+    "agent-skills",
+    "positioning",
+    "icp",
+    "jtbd"
   ],
-  "skills": "./",
+  "skills": "./skills/",
   "interface": {
-    "displayName": "Buyer Context",
-    "shortDescription": "AI-readability audits for buying agents",
-    "longDescription": "Buyer Context is a 12-skill audit suite that runs your site through the same pass an AI buying agent does — extractability, schema, ICP alignment, citation-worthy proof, agent-actionability, crawler accessibility — and writes a prioritized gap report your repair agents can act on.",
+    "displayName": "BuyerContext",
+    "shortDescription": "Research agents for source-backed buyer context",
+    "longDescription": "BuyerContext researches company, customer, market, and competitor evidence, then turns it into durable buyer intelligence for product, go-to-market, sales, content, and AI agents.",
     "developerName": "Revensi",
-    "category": "Engineering",
+    "category": "Productivity",
     "capabilities": [
       "Interactive",
       "Read",
@@ -35,13 +36,11 @@
     "privacyPolicyURL": "https://github.com/RevensiAI/BuyerContext/blob/main/PRIVACY.md",
     "termsOfServiceURL": "https://revensi.com",
     "defaultPrompt": [
-      "Run a full buyer-context audit on my site",
-      "Audit my homepage for AI buying agents",
-      "Check if AI bots can crawl my site"
+      "Build a buyer context from my company and customer evidence",
+      "Research this market and the alternatives buyers compare",
+      "Refresh my buyer context and show what changed"
     ],
     "brandColor": "#0F766E",
-    "composerIcon": "./assets/icon.png",
-    "logo": "./assets/logo.png",
     "screenshots": []
   }
 }

@@ -1,18 +1,18 @@
 {
   "name": "buyer-context",
-  "version": "0.2.0",
-  "description": "12-skill audit collection that simulates how AI buying agents read your site and produces a gap report your repair agents can close.",
+  "version": "0.3.0",
+  "description": "Research-agent toolkit for building source-backed buyer context from company, customer, market, and competitor evidence.",
   "keywords": [
-    "audit",
-    "ai-readability",
+    "buyer-research",
+    "customer-research",
+    "market-research",
+    "competitor-research",
     "buyer-context",
+    "agent-skills",
     "llm-agents",
-    "structured-data",
-    "json-ld",
-    "schema",
-    "seo",
-    "claude-code",
-    "agent-skills"
+    "positioning",
+    "icp",
+    "jtbd"
   ],
   "homepage": "https://buyercontext.com",
   "bugs": {
@@ -28,24 +28,16 @@
     "url": "https://revensi.com"
   },
   "files": [
-    "about-audit",
-    "agent-page",
-    "buyer-context",
-    "case-study-audit",
-    "comparison-audit",
-    "competitor-audit",
-    "crawler-audit",
-    "faq-audit",
-    "features-audit",
-    "full-audit",
-    "homepage-audit",
-    "pricing-audit",
+    "skills",
     "shared",
     ".claude-plugin",
     ".codex-plugin",
     ".agents",
     "PRIVACY.md"
   ],
+  "scripts": {
+    "sync": "node shared/scripts/sync-runtime.mjs"
+  },
   "engines": {
     "node": ">=18"
   }

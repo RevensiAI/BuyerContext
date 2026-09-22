@@ -1,289 +1,117 @@
-# BuyerContext Skills for AI Agents
+# BuyerContext
 
-A 12-skill audit collection that simulates how AI buying agents read your site — and produces a gap report your own agents can close.
+An open research-agent toolkit for building and maintaining a source-backed picture of who buys, why they act, what they compare, and what evidence they trust.
 
-When a buyer asks ChatGPT, Claude, Gemini, or Perplexity to "find me a \<category\> for \<my situation\>", the model visits a handful of vendor sites and decides which ones make the shortlist. This suite runs that same pass against your site, scoring each surface on whether an agent can extract your offer, locate your price, verify your ICP fit, cite your proof, and progress without a human. The output is a structured `./reports/` directory: deficiencies, prioritized, in a form your repair agents can act on directly.
+BuyerContext turns company material, customer conversations, CRM notes, reviews, market sources, competitor evidence, and product documentation into a durable `buyer-context.md`. A company website can contribute evidence, but it is one source—not the product and not automatically the truth.
 
-Works with Claude Code, OpenAI Codex, Cursor, Windsurf, and any runtime that supports Agent Skills.
+Works with Claude Code, OpenAI Codex, Cursor, Windsurf, and other runtimes that support [Agent Skills](https://agentskills.io/).
 
-## Prerequisites
+## What it produces
 
-- An agent runtime that supports Agent Skills — [Claude Code](https://docs.claude.com/en/docs/claude-code/overview), OpenAI Codex, Cursor, Windsurf, or similar.
-- Skills are installed via `npx skills add` and invoked with `/skill-name`.
-- Node.js 18+ on `PATH`.
+```text
+research/
+├── company.md
+├── customers.md
+├── market.md
+└── competitors.md
+buyer-context.md
+```
 
-No API keys required for the core flow. `BRAVE_API_KEY` is optional — see [Optional environment](#optional-environment).
+The research files preserve evidence and uncertainty. `buyer-context.md` synthesizes the knowledge that downstream product, go-to-market, sales, content, and AI agents need: ICP, buying committee, jobs, triggers, pains, desired outcomes, decision criteria, objections, alternatives, buyer language, proof, positioning implications, and open questions.
+
+## Skills
+
+| Skill | Purpose | Output |
+|---|---|---|
+| `buyer-context` | Build or refresh the canonical buyer intelligence document | `buyer-context.md` |
+| `company-research` | Understand the offer, capabilities, customers, constraints, and proof | `research/company.md` |
+| `customer-research` | Analyze interviews, calls, CRM notes, reviews, and support evidence | `research/customers.md` |
+| `market-research` | Research the category, buyer environment, demand drivers, and shifts | `research/market.md` |
+| `competitor-research` | Analyze the alternatives buyers actually compare | `research/competitors.md` |
+| `full-research` | Coordinate all four workstreams and synthesize buyer context | All five files |
 
 ## Install
+
+Install the Agent Skills collection:
 
 ```bash
 npx skills add RevensiAI/BuyerContext
 ```
 
-Installs all 12 skills under `~/.claude/skills/`. Individual skills install the same way:
-
-```bash
-npx skills add RevensiAI/BuyerContext/homepage-audit
-```
-
-### Or install as a Claude Code plugin
-
-Claude Code users can install the suite as a plugin instead. Add the marketplace once, then install the plugin:
+Or install it as a Claude Code plugin:
 
 ```bash
 /plugin marketplace add RevensiAI/BuyerContext
 /plugin install revensi@revensi-buyer-context
 ```
 
-This installs all 12 skills under the `revensi` plugin namespace. Anywhere the [Quickstart](#quickstart) below shows `/skill-name`, plugin users type `/revensi:skill-name`:
-
-```
-/revensi:buyer-context
-/revensi:crawler-audit
-/revensi:full-audit example.com
-/revensi:homepage-audit https://example.com
-```
-
-To pull in upstream updates: `/plugin marketplace update revensi-buyer-context`. To remove: `/plugin uninstall revensi`.
-
-### Or install as an OpenAI Codex plugin
-
-The repo also ships a Codex plugin manifest (`.codex-plugin/plugin.json`) and marketplace entry (`.agents/plugins/marketplace.json`). Point Codex at the marketplace, then install the plugin from it:
+Or as an OpenAI Codex plugin:
 
 ```bash
 codex plugin marketplace add RevensiAI/BuyerContext
 codex plugin install buyer-context@revensi-buyer-context
 ```
 
-All 12 skills are auto-discovered from the repo root.
-
-The plugin and `npx skills add` paths are independent — pick one. The plugin route gives namespacing and one-command updates inside Claude Code or Codex; the `npx` route is portable to other Agent Skills runtimes (Cursor, Windsurf, etc.).
-
-### Running in Claude Code Cowork
-
-The suite works in [Claude Code on the web / Cowork](https://docs.claude.com/en/docs/claude-code/web-quickstart) — the audit scripts only need Node 18+, the built-in `fetch`, and outbound HTTPS, all standard in Cowork's sandbox. A few setup notes:
-
-- **Network policy** — set the environment's outbound network access to **Trusted**. Every audit fetches public URLs; with **None**, all audits will fail.
-- **Setup script** — Cowork sessions start from a fresh clone, so installs don't persist across sessions. Add the install to your environment's setup script so it runs automatically:
-
-  ```bash
-  npx skills add RevensiAI/BuyerContext
-  ```
-
-  (`npx` works in setup scripts; the `/plugin marketplace add` flow runs inside Claude Code itself, so for plugin-style installs you'd type the two `/plugin …` commands at the start of each session.)
-- **Env vars** — if you'll use `/revensi:competitor-audit` with auto-discovery, set `BRAVE_API_KEY` in the Cowork environment's env vars. Without it, competitor-audit asks you to confirm competitor names directly.
-- **Retrieving reports** — `./reports/` and `./buyer-context.md` land in the cloud workspace. Commit and push (or use Cowork's PR flow) to pull them back to your machine.
+Node.js 18 or newer is required for the included public-page research helpers. No API key is required for the core workflow. `BRAVE_API_KEY` is optional when the agent runtime has no native web search.
 
 ## Quickstart
 
-Run these inside your agent, from the directory you want reports to land in. Order matters: the anchor (step 1) is what every audit reads for alignment scoring.
+Run a complete research pass:
 
-1. **Define your buyer context** (one-time, ~3 minutes — site-grounded options, near-zero typing):
-
-   ```
-   /buyer-context
-   ```
-
-   Writes `./buyer-context.md` — your ICP, positioning, USP, proof points, and CTA patterns. See [About `/buyer-context`](#about-buyer-context) for what makes this the anchor every other audit reads.
-
-2. **Audit your crawl-layer infrastructure** (robots.txt, sitemap, llms.txt, JSON-LD, anti-bot rules):
-
-   ```
-   /crawler-audit
-   ```
-
-3. **Audit a single surface** or **the whole site**:
-
-   ```
-   /homepage-audit https://example.com
-   /full-audit example.com
-   ```
-
-Reports land in `./reports/`. `full-audit` runs skills 2–10 in parallel and writes a synthesized cross-surface report.
-
-Skip step 1 and `/full-audit` or `/competitor-audit` will notice the missing anchor and offer to chain in `/buyer-context` for you — so a cold start at step 3 is fine.
-
-### How fetching works
-
-Each skill ships small Node scripts under `<skill>/scripts/`:
-
-- `audit-fetch.mjs` — page fetcher returning structured JSON (parsed JSON-LD, OG/Twitter, canonical, headings, anti-bot signals, `visibleText`).
-- `audit-robots.mjs` — fetches and parses `robots.txt` into a per-bot allow/disallow matrix for the AI-bot panel.
-- `audit-sitemap.mjs` — sitemap URL count, freshness, sitemap-index walking.
-- `audit-uatest.mjs` — fetches the same URL with browser, GPTBot, and curl UAs and diffs the responses (the only reliable anti-bot detector).
-- `audit-find-competitors.mjs` (competitor-audit only) — Brave Search competitor discovery.
-
-Throughout the SKILL.md files, `./scripts/<name>.mjs` refers to a script under the **skill's** folder (typically `~/.claude/skills/<skill>/scripts/<name>.mjs` after install). Bash runs in your project CWD, so the model invokes scripts by absolute install path while reports land in your project directory.
-
-Each fetch writes its full payload to `./reports/fetch_<sha1>.json` (sha-keyed by URL+UA, overwritten on subsequent runs), so the model can re-read the raw HTML/headers on demand without re-fetching mid-audit. On first run, `reports/` is appended to `.gitignore` if one exists.
-
-### Re-audit cadence
-
-To track progress over time, schedule a periodic re-run with the `/loop` skill:
-
-```
-/loop 30d /full-audit example.com
+```text
+/full-research
 ```
 
-Each run writes a fresh `./reports/full-audit-report.md`, so you can diff month-over-month and watch the score move.
+Or start with the evidence you already have:
 
-## About `/buyer-context`
+```text
+/customer-research ./interviews ./win-loss-notes.csv
+/company-research ./product-docs https://example.com
+/market-research Research the UK market for …
+/competitor-research Compare the alternatives buyers use for …
+/buyer-context Refresh our buyer context from the research folder
+```
 
-`/buyer-context` is the anchor of the suite. Every other audit reads `./buyer-context.md` to score the **Buyer-Context Alignment** dimension. Without it, audits drop to "no-anchor mode" and give generic feedback ("your headline could be more specific"). With it, audits become matchmaking — *"your homepage says 'platform for teams' but your buyer is engineering managers at Series B startups replacing Jenkins, and you never name them."*
+Each skill asks only for information needed to establish scope, reads evidence the user places in scope, and writes Markdown into the current project. It does not publish or share results without an explicit request.
 
-The asset is also reusable beyond this suite. Any repair agent, content rewriter, ad-copy generator, or sales-enablement tool can read the same file — it's plain Markdown with stable headings, diffable in git, durable across runtimes.
+## Research standard
 
-### Why it takes ~3 minutes, not 3 hours
+BuyerContext distinguishes four states:
 
-Most "fill out an ICP doc" exercises fail because they're blank-page typing. This one front-loads inference before asking anything:
+- **Observed** — directly supported by a cited source.
+- **Inferred** — a reasoned interpretation of cited evidence.
+- **Hypothesis** — plausible but not yet well supported.
+- **Unknown** — important information the evidence cannot answer.
 
-- Fetches your homepage + `/pricing` + `/customers` in parallel via `audit-fetch.mjs`, then builds an internal evidence bundle (brand, tagline, CTA copy, pricing tiers, testimonial titles, vertical clusters, recurring noun phrases, competitor mentions, numeric claims, certification badges, recent press).
-- **Auto-fills 5 high-confidence fields silently** — Brand, Site, Tagline, Primary CTA, Category — and surfaces them at the final review screen.
-- Asks the remaining ~17 fields one at a time, each as a click-through with 2–4 options *derived from your site copy* plus an auto-appended "Other" for free text. Each option's description tells you *why* it's a candidate ("your CTAs say…", "your /pricing tiers are…").
-- Even prose-shaped fields — JTBD, one-sentence pitch, USP, core differentiating claim — are presented as 2–3 candidate phrasings synthesized from your hero and `/features` copy. You click rather than type.
-
-Net effect: ~17 clicks, not 17 essays.
-
-### What it captures
-
-The output file follows a stable schema (audit skills grep for these headings, so they don't change):
-
-- **Brand & Product** — name, primary product, site, category, current tagline.
-- **ICP** — segment, sales motion, company size, vertical, geography, buyer titles, user titles, anti-ICP.
-- **Job-to-be-Done** — primary JTBD in "When I'm X, I want to Y, so I can Z" form, trigger event, current alternative, switching cost.
-- **Positioning** — one-sentence pitch, USP, core differentiating claim, why now.
-- **Proof Points** — 3–5 cite-able, dated, sourced facts an LLM should be able to quote.
-- **Must-Win Verticals** — the 1–3 segments that matter most this quarter (audits weight alignment to these higher).
-- **Distinguishing Vocabulary** — words to *use*, words to *avoid*.
-- **Failure Modes of Incumbents** — what's broken about the obvious alternative.
-- **Primary Conversion Action** — primary CTA, secondary CTA, anti-CTA.
-
-Full schema: [`shared/buyer-context.spec.md`](shared/buyer-context.spec.md).
-
-### Staying current
-
-Re-running `/buyer-context` on a site that already has the file re-fetches your site (so it can diff against current evidence) and offers three modes:
-
-- **Refresh stale fields only** *(default)* — only asks fields where site evidence has measurably changed since the last update, OR the file is older than 90 days AND the field is in the high-decay set (Tagline, Primary CTA, Proof Points, Why Now).
-- **Walk all questions** — same as the new-file flow, but every question prepends "Keep current: \<value\>" as the first option.
-- **Replace from scratch** — discards the existing file.
-
-Audits use the `*Last updated: <YYYY-MM-DD>*` line to flag staleness. A typical cadence is once per quarter, or whenever positioning shifts (new ICP, new tagline) or audits start flagging low Buyer-Context Alignment across multiple surfaces — that often means the anchor itself drifted from the site.
-
-## What a report looks like
-
-Each audit produces a markdown file with a composite score, per-dimension breakdown, and prioritized findings — the gap your repair agents will close. Example header from `./reports/homepage-audit.md`:
-
-~~~markdown
-# Homepage Audit — example.com
-*Generated 2026-05-07. Buyer context: ./buyer-context.md (loaded).*
-
-## Composite Score: 6.4 / 10
-
-| Dimension                     | Score | Weight | Weighted |
-|-------------------------------|-------|--------|----------|
-| Extractability                | 8     | 2      | 16       |
-| Schema & Structured Data      | 4     | 2      | 8        |
-| Buyer-Context Alignment       | 7     | 3      | 21       |
-| Trust & Citation-Worthiness   | 6     | 2      | 12       |
-| Agent-Actionability           | 5     | 1      | 5        |
-| Crawler Accessibility         | 9     | 1      | 9        |
-| **Total**                     |       | **11** | **71 / 110 = 6.4** |
-~~~
-
-Below the table, each report lists what's working, what's broken, and prioritized fixes ranked by impact × ease.
-
-## The skills
-
-| # | Skill | What it does | Output |
-|---|-------|--------------|--------|
-| 1 | `buyer-context` | Guided Q&A → canonical positioning doc | `./buyer-context.md` |
-| 2 | `crawler-audit` | robots.txt, sitemap, llms.txt, JSON-LD, anti-bot | `./reports/crawler-audit.md` |
-| 3 | `homepage-audit` | Homepage agent-shortlist score | `./reports/homepage-audit.md` |
-| 4 | `pricing-audit` | Pricing page (Offer schema, plans, terms) | `./reports/pricing-audit.md` |
-| 5 | `about-audit` | About/Team (Organization + Person schema) | `./reports/about-audit.md` |
-| 6 | `comparison-audit` | /vs/ pages (factual claims, competitor names) | `./reports/comparison-audit.md` |
-| 7 | `features-audit` | Feature page (feature→JTBD, integrations) | `./reports/features-audit.md` |
-| 8 | `case-study-audit` | Case studies (named customer, dated, quantified) | `./reports/case-study-audit.md` |
-| 9 | `faq-audit` | FAQ (FAQPage schema, atomic Q/A) | `./reports/faq-audit.md` |
-| 10 | `agent-page` | Audit OR build a `/for-ai-agents` page | `./reports/agent-page[-generated].md` |
-| 11 | `competitor-audit` | Competitor's site through the same lens | `./reports/competitor-audit.md` + `competitor-context.md` |
-| 12 | `full-audit` | Orchestrates 2–10 in parallel, synthesizes | `./reports/full-audit-report.md` |
-
-## The rubric
-
-Every audit scores six dimensions 1–10, with surface-specific weights:
-
-1. **Extractability** — plain-text clarity (no JS-only content)
-2. **Schema & Structured Data** — JSON-LD: Organization, Product, Offer, FAQPage, Article, etc.
-3. **Buyer-Context Alignment** — does the page match the ICP and positioning in `buyer-context.md`?
-4. **Trust & Citation-Worthiness** — named, dated, sourced proof models will cite
-5. **Agent-Actionability** — can an agent take the next step without a human?
-6. **Crawler Accessibility** — AI bots (GPTBot, ClaudeBot, etc.) allowed; llms.txt present
-
-Full rubric: [`shared/audit-engine.md`](shared/audit-engine.md).
-
-## Optional environment
-
-- `BRAVE_API_KEY` — enables `competitor-audit` to discover competitors via Brave Search (`audit-find-competitors.mjs`) when no URL is given. Free tier at [brave.com/search/api](https://brave.com/search/api/). Without it, competitor-audit asks you to confirm competitor names directly.
+Material claims carry stable source IDs. The skills preserve contradictions, segment differences, confidence limits, and verbatim buyer language without inventing quotes or filling gaps with generic personas. See [`shared/research-method.md`](shared/research-method.md) and [`shared/buyer-context.spec.md`](shared/buyer-context.spec.md).
 
 ## Repository layout
 
-```
-buyer-context/
-├── README.md                  ← you are here
-├── LICENSE                    ← MIT
-├── PRIVACY.md
-├── .claude-plugin/            ← Claude Code plugin + marketplace manifests
-│   ├── plugin.json
-│   └── marketplace.json
-├── .codex-plugin/             ← OpenAI Codex plugin manifest
-│   └── plugin.json
-├── .agents/plugins/           ← OpenAI Codex marketplace entry
-│   └── marketplace.json
-├── shared/                    ← maintainer source of truth (NOT installed)
-│   ├── audit-engine.md
-│   ├── ai-bots.md
-│   ├── buyer-context.spec.md
-│   └── scripts/
-│       ├── audit-fetch.mjs
-│       ├── audit-robots.mjs
-│       ├── audit-sitemap.mjs
-│       ├── audit-uatest.mjs
-│       ├── audit-find-competitors.mjs
-│       └── sync-references.mjs   ← maintainer tool, not propagated
-├── buyer-context/             ← skill folders (each installed standalone)
-│   ├── SKILL.md
-│   ├── references/
-│   └── scripts/
-├── crawler-audit/
-├── homepage-audit/
-├── ...
-└── full-audit/
+```text
+BuyerContext/
+├── skills/
+│   ├── buyer-context/
+│   ├── company-research/
+│   ├── customer-research/
+│   ├── market-research/
+│   ├── competitor-research/
+│   └── full-research/
+├── shared/                  # source of truth for shared references and scripts
+├── .claude-plugin/
+├── .codex-plugin/
+└── .agents/plugins/
 ```
 
-`shared/` is the canonical authored copy. Each skill ships its own runtime copies under `references/` and `scripts/` so it works standalone after `npx skills add` installs just that one folder.
+Maintainers can run `npm run sync` after changing a shared reference or script. Each skill remains independently installable because the sync step copies its required runtime files into that skill directory.
 
-**Maintainers**: edit canonical files in `shared/` only, then run:
+## About Revensi
 
-```bash
-node shared/scripts/sync-references.mjs
-```
+We help companies define their AI strategy and build proprietary AI systems around their data, workflows and knowledge, without locking critical intelligence into a vendor.
 
-`sync-references` propagates `shared/audit-engine.md`, `shared/ai-bots.md`, `shared/buyer-context.spec.md`, and the runtime scripts into the right per-skill folders. Re-running it is idempotent (skips byte-identical files).
+Learn more at [revensi.com](https://revensi.com).
 
-## Contributing
+## Privacy, contributions, and license
 
-Contributions welcome — issues, PRs, new skill ideas, rubric refinements. Open a PR or file an issue on [GitHub](https://github.com/RevensiAI/BuyerContext).
+The toolkit has no Revensi telemetry or hosted backend. Local evidence and outputs remain in the user's environment by default. See [`PRIVACY.md`](PRIVACY.md) for the full data-flow description.
 
-## About
-
-Built and maintained by [Revensi](https://revensi.com). We help companies define their AI strategy and build proprietary AI systems around their data, workflows and knowledge, without locking critical intelligence into a vendor.
-
-## License
-
-MIT. See [`LICENSE`](LICENSE).
-
-## Privacy
-
-The plugin runs locally and does not send data to Revensi or any third party (except the URLs you audit, and Brave Search if you supply an API key). See [`PRIVACY.md`](PRIVACY.md) for details.
+Issues and focused pull requests are welcome. BuyerContext is available under the [MIT License](LICENSE).

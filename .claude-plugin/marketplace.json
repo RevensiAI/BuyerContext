@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-marketplace.json",
   "name": "revensi-buyer-context",
-  "description": "Revensi's buyer-context audit plugin for Claude Code.",
+  "description": "Revensi's buyer research plugin for Claude Code.",
   "owner": {
     "name": "Revensi",
     "email": "hello@revensi.com"
@@ -10,14 +10,14 @@
     {
       "name": "revensi",
       "source": "./",
-      "description": "12-skill audit collection that simulates how AI buying agents read your site and produces a gap report your repair agents can close.",
-      "category": "audit",
+      "description": "Research agents for building source-backed buyer context from company, customer, market, and competitor evidence.",
+      "category": "research",
       "tags": [
-        "ai-readability",
-        "buyer-context",
-        "structured-data",
-        "audit",
-        "llm-agents"
+        "buyer-research",
+        "customer-research",
+        "market-research",
+        "competitor-research",
+        "buyer-context"
       ],
       "homepage": "https://github.com/RevensiAI/BuyerContext",
       "license": "MIT"
